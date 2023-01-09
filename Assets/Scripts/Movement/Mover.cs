@@ -1,11 +1,10 @@
 using UnityEngine;
 using UnityEngine.AI;
-using RPG.Combat;
 using RPG.Core;
 
 namespace RPG.Movement
 {
-    public class Mover : MonoBehaviour
+    public class Mover : MonoBehaviour, IAction
     {
         [SerializeField]
         Transform target;
@@ -38,7 +37,6 @@ namespace RPG.Movement
         public void startMoveAction(Vector3 destination)
         {
             GetComponent<ActionScheduler>().startAction(this);
-            GetComponent<Fighter>().cancel();
             moveTo(destination);
         }
 
@@ -48,7 +46,7 @@ namespace RPG.Movement
             agent.isStopped = false;
         }
 
-        public void stop()
+        public void Cancel()
         {
             agent.isStopped = true;
         }
