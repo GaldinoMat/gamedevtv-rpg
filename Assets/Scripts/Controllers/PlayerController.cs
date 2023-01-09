@@ -23,7 +23,7 @@ namespace RPG.Control
 
         private bool interactWithCombat()
         {
-            RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+            RaycastHit[] hits = Physics.RaycastAll(getMouseRay());
 
             foreach (RaycastHit item in hits)
             {
@@ -33,7 +33,7 @@ namespace RPG.Control
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    gameObject.GetComponent<Fighter>().Attack(target);
+                    GetComponent<Fighter>().attack(target);
                 }
                 return true;
             }
@@ -45,13 +45,13 @@ namespace RPG.Control
         {
 
             RaycastHit hit;
-            bool isHit = Physics.Raycast(GetMouseRay(), out hit);
+            bool isHit = Physics.Raycast(getMouseRay(), out hit);
 
             if (isHit)
             {
                 if (Input.GetMouseButton(0))
                 {
-                    mover.moveTo(hit.point);
+                    mover.startMoveAction(hit.point);
                 }
                 return true;
             }
@@ -59,7 +59,7 @@ namespace RPG.Control
             return false;
         }
 
-        private static Ray GetMouseRay()
+        private static Ray getMouseRay()
         {
             return Camera.main.ScreenPointToRay(Input.mousePosition);
         }
