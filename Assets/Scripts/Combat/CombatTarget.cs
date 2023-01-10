@@ -2,8 +2,6 @@ using UnityEngine;
 
 namespace RPG.Combat
 {
-    public class CombatTarget : MonoBehaviour
-    {
-
-    }
+    [RequireComponent(typeof(Health))]
+    public class CombatTarget : MonoBehaviour { }
 }
