@@ -8,7 +8,6 @@ namespace RPG.Control
     {
         Mover mover;
 
-
         private void Start()
         {
             mover = GetComponent<Mover>();
@@ -29,7 +28,7 @@ namespace RPG.Control
             {
                 CombatTarget target = item.transform.GetComponent<CombatTarget>();
 
-                if (target == null) continue;
+                if (!GetComponent<Fighter>().CanAttack(target)) continue;
 
                 if (Input.GetMouseButtonDown(0))
                 {

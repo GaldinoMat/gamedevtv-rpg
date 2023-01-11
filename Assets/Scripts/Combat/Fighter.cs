@@ -43,24 +43,41 @@ namespace RPG.Combat
 
         private void AttackBehaviour()
         {
+            transform.LookAt(target.transform);
             if (timeSinceLastAttack >= attackSpeed)
             {
                 // Triggers the animation event
-                anim.SetTrigger("attack");
+                TriggerAttack();
                 timeSinceLastAttack = 0;
             }
+        }
+
+        private void TriggerAttack()
+        {
+            anim.ResetTrigger("stopAttack");
+            anim.SetTrigger("attack");
         }
 
 
         // Animation event 
         void Hit()
         {
+            if (target == null) return;
+
             target.TakeDamage(weaponDamage);
         }
 
         private bool GetIsInRange()
         {
             return Vector3.Distance(transform.position, target.transform.position) <= weaponRange;
+        }
+
+        public bool CanAttack(CombatTarget target)
+        {
+            if (target == null) return false;
+
+            Health targetToAttack = target.GetComponent<Health>();
+            return targetToAttack != null && !targetToAttack.IsDead();
         }
 
         public void attack(CombatTarget combatTarget)
@@ -71,7 +88,13 @@ namespace RPG.Combat
 
         public void Cancel()
         {
+            StopAttack();
             target = null;
+        }
+
+        private void StopAttack()
+        {
+            anim.ResetTrigger("attack");
             anim.SetTrigger("stopAttack");
         }
     }
