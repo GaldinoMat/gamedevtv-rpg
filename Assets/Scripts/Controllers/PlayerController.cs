@@ -1,6 +1,7 @@
 using RPG.Movement;
 using UnityEngine;
 using RPG.Combat;
+using RPG.Core;
 
 namespace RPG.Control
 {
@@ -8,13 +9,21 @@ namespace RPG.Control
     {
         Mover mover;
 
+        Health health;
+        
+        Fighter fighter;
+
         private void Start()
         {
             mover = GetComponent<Mover>();
+            fighter = GetComponent<Fighter>();
+            health = GetComponent<Health>();
         }
 
         private void Update()
         {
+            if (health.IsDead()) return;
+
             if (interactWithCombat()) return;
             if (interactWithMovement()) return;
             print("Nothing here");
@@ -28,11 +37,13 @@ namespace RPG.Control
             {
                 CombatTarget target = item.transform.GetComponent<CombatTarget>();
 
-                if (!GetComponent<Fighter>().CanAttack(target)) continue;
+                if (target == null) continue;
 
-                if (Input.GetMouseButtonDown(0))
+                if (!fighter.CanAttack(target.gameObject)) continue;
+
+                if (Input.GetMouseButton(0))
                 {
-                    GetComponent<Fighter>().attack(target);
+                    fighter.attack(target.gameObject);
                 }
                 return true;
             }
@@ -50,7 +61,7 @@ namespace RPG.Control
             {
                 if (Input.GetMouseButton(0))
                 {
-                    mover.startMoveAction(hit.point);
+                    mover.StartMoveAction(hit.point, 1f);
                 }
                 return true;
             }
