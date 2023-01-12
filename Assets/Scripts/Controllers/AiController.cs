@@ -1,3 +1,4 @@
+using System;
 using RPG.Combat;
 using RPG.Core;
 using RPG.Movement;
@@ -10,17 +11,27 @@ namespace RPG.Control
     {
         Vector3 guardPosition;
 
+        GameObject playerObj;
+
         Fighter fighter;
 
         Health health;
 
         Mover mover;
 
-        GameObject playerObj;
+        [SerializeField] PatrolPath path;
 
         [SerializeField] float chaseDistance = 5f;
         [SerializeField] float suspicionTime = 3f;
+        [SerializeField] float waypointTolerance = 1f;
+        [SerializeField] float dwellingTime = 0f;
+        [Range(0, 1)]
+        [SerializeField] float patrolSpeedFraction = .2f;
+
         float timeSinceAlert = Mathf.Infinity;
+        float timeSinceLastDwell = Mathf.Infinity;
+
+        int currentWaypointIndex = 0;
 
         private void Start()
         {
@@ -46,10 +57,16 @@ namespace RPG.Control
             }
             else
             {
-                GuardBehaviour();
+                PatrolBehaviour();
             }
 
+            UpdateTimers();
+        }
+
+        private void UpdateTimers()
+        {
             timeSinceAlert += Time.deltaTime;
+            timeSinceLastDwell += Time.deltaTime;
         }
 
         private void AttackBehaviour()
@@ -63,12 +80,44 @@ namespace RPG.Control
             GetComponent<ActionScheduler>().CancelCurrentAction();
         }
 
-        private void GuardBehaviour()
+        private void PatrolBehaviour()
         {
-            fighter.Cancel();
-            mover.startMoveAction(guardPosition);
+            Vector3 nextPosition = guardPosition;
+
+            if (path != null)
+            {
+                if (AtWaypoint())
+                {
+                    timeSinceLastDwell = 0;
+                    CycleWaypoint();
+                }
+
+                nextPosition = GetCurrentWaypoint();
+            }
+
+            if (timeSinceLastDwell >= dwellingTime)
+            {
+                fighter.Cancel();
+                mover.StartMoveAction(nextPosition, patrolSpeedFraction);
+            }
         }
 
+        private Vector3 GetCurrentWaypoint()
+        {
+            return path.GetWaypoint(currentWaypointIndex);
+        }
+
+        private void CycleWaypoint()
+        {
+            currentWaypointIndex = path.GetNextIndex(currentWaypointIndex);
+        }
+
+        private bool AtWaypoint()
+        {
+            float distanceToWaypoint = Vector3.Distance(transform.position, GetCurrentWaypoint());
+
+            return distanceToWaypoint < waypointTolerance;
+        }
 
         private bool CanChase()
         {

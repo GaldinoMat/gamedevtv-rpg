@@ -13,6 +13,7 @@ namespace RPG.Combat
         [SerializeField] float attackSpeed;
         [SerializeField] float weaponDamage = 5f;
 
+
         float timeSinceLastAttack = Mathf.Infinity;
 
         Animator anim;
@@ -36,7 +37,7 @@ namespace RPG.Combat
         {
             if (!GetIsInRange())
             {
-                mover.moveTo(target.transform.position);
+                mover.MoveTo(target.transform.position, 1f);
             }
             else
             {

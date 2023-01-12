@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 using RPG.Core;
@@ -15,6 +16,8 @@ namespace RPG.Movement
 
         Health health;
 
+        [SerializeField] float maxSpeed = 6f;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -28,10 +31,10 @@ namespace RPG.Movement
         {
             agent.enabled = !health.IsDead();
 
-            updateAnimator();
+            UpdateAnimator();
         }
 
-        private void updateAnimator()
+        private void UpdateAnimator()
         {
             Vector3 velocity = agent.velocity;
             float localZ = transform.InverseTransformDirection(velocity).z;
@@ -39,15 +42,16 @@ namespace RPG.Movement
             anim.SetFloat("forwardSpeed", localZ);
         }
 
-        public void startMoveAction(Vector3 destination)
+        public void StartMoveAction(Vector3 destination, float speedFraction)
         {
             GetComponent<ActionScheduler>().startAction(this);
-            moveTo(destination);
+            MoveTo(destination, speedFraction);
         }
 
-        public void moveTo(Vector3 destination)
+        public void MoveTo(Vector3 destination, float speedFraction)
         {
             agent.SetDestination(destination);
+            agent.speed = maxSpeed * Mathf.Clamp01(speedFraction);
             agent.isStopped = false;
         }
 

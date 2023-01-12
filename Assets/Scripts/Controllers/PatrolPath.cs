@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace RPG.Control
@@ -12,9 +10,20 @@ namespace RPG.Control
         {
             for (int i = 0; i < transform.childCount; i++)
             {
-                Gizmos.color = Color.white;
-                Gizmos.DrawSphere(transform.GetChild(i).transform.position, waypointSize);
+                Gizmos.DrawSphere(GetWaypoint(i), waypointSize);
+
+                Gizmos.DrawLine(GetWaypoint(i), GetWaypoint(GetNextIndex(i)));
             }
+        }
+
+        public int GetNextIndex(int i)
+        {
+            return i == transform.childCount - 1 ? 0 : i + 1;
+        }
+
+        public Vector3 GetWaypoint(int i)
+        {
+            return transform.GetChild(i).transform.position;
         }
     }
 
