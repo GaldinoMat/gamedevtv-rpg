@@ -72,7 +72,7 @@ namespace RPG.Control
         private void AttackBehaviour()
         {
             timeSinceAlert = 0;
-            fighter.attack(playerObj);
+            fighter.Attack(playerObj);
         }
 
         private void SuspicionBehaviour()

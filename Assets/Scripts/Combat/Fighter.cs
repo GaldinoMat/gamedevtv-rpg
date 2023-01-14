@@ -85,9 +85,9 @@ namespace RPG.Combat
             return targetToAttack != null && !targetToAttack.IsDead();
         }
 
-        public void attack(GameObject combatTarget)
+        public void Attack(GameObject combatTarget)
         {
-            GetComponent<ActionScheduler>().startAction(this);
+            GetComponent<ActionScheduler>().StartAction(this);
             target = combatTarget.GetComponent<Health>();
         }
 
@@ -95,6 +95,7 @@ namespace RPG.Combat
         {
             StopAttack();
             target = null;
+            mover.Cancel();
         }
 
         private void StopAttack()

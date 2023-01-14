@@ -24,14 +24,14 @@ namespace RPG.Control
         {
             if (health.IsDead()) return;
 
-            if (interactWithCombat()) return;
-            if (interactWithMovement()) return;
+            if (InteractWithCombat()) return;
+            if (InteractWithMovement()) return;
             print("Nothing here");
         }
 
-        private bool interactWithCombat()
+        private bool InteractWithCombat()
         {
-            RaycastHit[] hits = Physics.RaycastAll(getMouseRay());
+            RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
 
             foreach (RaycastHit item in hits)
             {
@@ -43,7 +43,7 @@ namespace RPG.Control
 
                 if (Input.GetMouseButton(0))
                 {
-                    fighter.attack(target.gameObject);
+                    fighter.Attack(target.gameObject);
                 }
                 return true;
             }
@@ -51,11 +51,11 @@ namespace RPG.Control
             return false;
         }
 
-        private bool interactWithMovement()
+        private bool InteractWithMovement()
         {
 
             RaycastHit hit;
-            bool isHit = Physics.Raycast(getMouseRay(), out hit);
+            bool isHit = Physics.Raycast(GetMouseRay(), out hit);
 
             if (isHit)
             {
@@ -69,7 +69,7 @@ namespace RPG.Control
             return false;
         }
 
-        private static Ray getMouseRay()
+        private static Ray GetMouseRay()
         {
             return Camera.main.ScreenPointToRay(Input.mousePosition);
         }
