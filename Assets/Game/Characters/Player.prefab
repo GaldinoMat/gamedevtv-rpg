@@ -108,6 +108,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4796207738226832392, guid: dc52d87b8d7d3fe49ba241e605729f2d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5681382651553213067, guid: dc52d87b8d7d3fe49ba241e605729f2d, type: 3}
       propertyPath: m_Name
       value: Player
@@ -129,6 +133,20 @@ GameObject:
   m_PrefabInstance: {fileID: 2194709335184308585}
   m_PrefabAsset: {fileID: 0}
 --- !u!136 &1581306833
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5813443331602093026}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!136 &5967013530053295209
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -167,17 +185,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2fb11d58f2fb41d980db526dc5d7f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!136 &5967013530053295209
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5813443331602093026}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
