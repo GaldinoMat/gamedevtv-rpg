@@ -10,41 +10,58 @@ namespace RPG.Saving
     {
         public void Save(string saveFile)
         {
-            string savePath = GetPathFromSaveFile(saveFile);
-            using (FileStream fileStream = File.Open(savePath, FileMode.Create))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(fileStream, CaptureState());
-            }
+            Dictionary<string, object> state = LoadFile(saveFile);
+            CaptureState(state);
+            SaveFile(saveFile, state);
         }
 
         public void Load(string saveFile)
         {
+            RestoreState(LoadFile(saveFile));
+        }
+
+        private Dictionary<string, object> LoadFile(string saveFile)
+        {
             string savePath = GetPathFromSaveFile(saveFile);
+
+            if (!File.Exists(savePath)) return new Dictionary<string, object>();
+
             using (FileStream fileStream = File.Open(savePath, FileMode.Open))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                RestoreState(formatter.Deserialize(fileStream));
+                return (Dictionary<string, object>)formatter.Deserialize(fileStream);
             }
         }
 
-        private void RestoreState(object state)
+        private void RestoreState(Dictionary<string, object> state)
         {
-            Dictionary<string, object> stateDictionary = (Dictionary<string, object>)state;
             foreach (SavableEntity entity in FindObjectsOfType<SavableEntity>())
             {
-                entity.RestoreState(stateDictionary[entity.GetUniqueIdentifier()]);
+                string id = entity.GetUniqueIdentifier();
+
+                if (state.ContainsKey(id))
+                {
+                    entity.RestoreState(state[id]);
+                }
             }
         }
 
-        private object CaptureState()
+        private void SaveFile(string saveFile, object state)
         {
-            Dictionary<string, object> stateDictionary = new Dictionary<string, object>();
+            string savePath = GetPathFromSaveFile(saveFile);
+            using (FileStream fileStream = File.Open(savePath, FileMode.Create))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(fileStream, state);
+            }
+        }
+
+        private void CaptureState(Dictionary<string, object> state)
+        {
             foreach (SavableEntity entity in FindObjectsOfType<SavableEntity>())
             {
-                stateDictionary[entity.GetUniqueIdentifier()] = entity.CaptureState();
+                state[entity.GetUniqueIdentifier()] = entity.CaptureState();
             }
-            return stateDictionary;
         }
 
         public string GetPathFromSaveFile(string savefile)
