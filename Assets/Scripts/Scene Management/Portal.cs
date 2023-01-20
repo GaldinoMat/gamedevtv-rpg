@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using RPG.Saving;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -42,15 +43,22 @@ namespace RPG.SceneManagement
 
             Fader fader = FindObjectOfType<Fader>();
 
+            SavingWrapper wrapper = FindObjectOfType<SavingWrapper>();
+
             yield return fader.FadeOut(fadeTimer);
+            
+            wrapper.SaveInput();
+            
             yield return SceneManager.LoadSceneAsync(sceneToLoad);
+            
+            wrapper.LoadInput();
 
             Portal portal = GetOtherPortal();
-
             UpdatePlayer(portal);
 
-            yield return new WaitForSeconds(loadTimer);
+            wrapper.SaveInput();
 
+            yield return new WaitForSeconds(loadTimer);
             yield return fader.FadeIn(fadeTimer);
             Destroy(gameObject, .1f);
         }
