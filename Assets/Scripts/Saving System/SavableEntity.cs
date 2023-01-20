@@ -1,7 +1,6 @@
-using RPG.Core;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace RPG.Saving
 {
@@ -9,6 +8,7 @@ namespace RPG.Saving
     public class SavableEntity : MonoBehaviour
     {
         [SerializeField] string uniqueIdentifier = "";
+        static Dictionary<string, SavableEntity> globalLookup = new Dictionary<string, SavableEntity>();
 
         public string GetUniqueIdentifier()
         {
@@ -17,34 +17,67 @@ namespace RPG.Saving
 
         public object CaptureState()
         {
-            return new SerializeVector3(transform.position);
+            Dictionary<string, object> state = new Dictionary<string, object>();
+            foreach (ISavable savable in GetComponents<ISavable>())
+            {
+                state[savable.GetType().ToString()] = savable.CaptureState();
+            }
+
+            return state;
         }
 
         public void RestoreState(object state)
         {
-            SerializeVector3 position = (SerializeVector3)state;
-            GetComponent<NavMeshAgent>().enabled = false;
-            transform.position = position.ToVector();
-            GetComponent<NavMeshAgent>().enabled = true;
-            GetComponent<ActionScheduler>().CancelCurrentAction();
+            Dictionary<string, object> stateDict = (Dictionary<string, object>)state;
+            foreach (ISavable savable in GetComponents<ISavable>())
+            {
+                string typeString = savable.GetType().ToString();
+
+                if (stateDict.ContainsKey(typeString))
+                {
+                    savable.RestoreState(stateDict[typeString]);
+                }
+            }
         }
 
 #if UNITY_EDITOR
         private void Update()
         {
             if (Application.IsPlaying(gameObject)) return;
+            if (string.IsNullOrEmpty(gameObject.scene.path)) return;
 
             SerializedObject serializedObject = new SerializedObject(this);
             SerializedProperty serializedProperty = serializedObject.FindProperty("uniqueIdentifier");
 
-            if (string.IsNullOrEmpty(gameObject.scene.path)) return;
-
-            if (string.IsNullOrEmpty(serializedProperty.stringValue))
+            if (string.IsNullOrEmpty(serializedProperty.stringValue) || !IsUnique(serializedProperty.stringValue))
             {
                 serializedProperty.stringValue = System.Guid.NewGuid().ToString();
                 serializedObject.ApplyModifiedProperties();
             }
+
+            globalLookup[serializedProperty.stringValue] = this;
         }
 #endif
+
+        private bool IsUnique(string candidate)
+        {
+            if (!globalLookup.ContainsKey(candidate)) return true;
+
+            if (globalLookup[candidate] == this) return true;
+
+            if (globalLookup[candidate] == null)
+            {
+                globalLookup.Remove(candidate);
+                return true;
+            }
+
+            if (globalLookup[candidate].GetUniqueIdentifier() != candidate)
+            {
+                globalLookup.Remove(candidate);
+                return true;
+            }
+
+            return false;
+        }
     }
 }

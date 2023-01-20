@@ -54,11 +54,11 @@ namespace RPG.SceneManagement
             wrapper.LoadInput();
 
             Portal portal = GetOtherPortal();
-
             UpdatePlayer(portal);
 
-            yield return new WaitForSeconds(loadTimer);
+            wrapper.SaveInput();
 
+            yield return new WaitForSeconds(loadTimer);
             yield return fader.FadeIn(fadeTimer);
             Destroy(gameObject, .1f);
         }
