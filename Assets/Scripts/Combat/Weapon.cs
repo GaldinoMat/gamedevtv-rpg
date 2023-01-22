@@ -7,11 +7,16 @@ namespace RPG.Combat
     public class Weapon : ScriptableObject
     {
         [SerializeField] public AnimatorOverrideController weaponAnimatorOverride = null;
+
+        
         [SerializeField] GameObject weaponPrefab = null;
+        
+        [SerializeField] Projectile projectile = null;
+        
         [SerializeField] float weaponRange = 0f;
         [SerializeField] float weaponDamage = 0f;
+        
         [SerializeField] bool isRightHanded = true;
-        [SerializeField] Projectile projectile = null;
 
         const string weaponName = "Weapon";
 
@@ -26,8 +31,17 @@ namespace RPG.Combat
                 newWeapon.name = weaponName;
             }
 
+            var overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
+
             if (weaponAnimatorOverride != null)
+            {
                 animator.runtimeAnimatorController = weaponAnimatorOverride;
+            }
+            else if (overrideController != null)
+            {
+                animator.runtimeAnimatorController = overrideController.runtimeAnimatorController;
+            }
+
 
         }
 
