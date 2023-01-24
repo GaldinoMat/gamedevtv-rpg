@@ -3490,6 +3490,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 857588791}
     m_Modifications:
+    - target: {fileID: 1163223846850562577, guid: e08fbde9ac8bc2f2a88f93dd69129621, type: 3}
+      propertyPath: isRespawnable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1746195190157907683, guid: e08fbde9ac8bc2f2a88f93dd69129621, type: 3}
       propertyPath: m_Name
       value: FireballPickUp
@@ -3859,6 +3863,10 @@ PrefabInstance:
       propertyPath: weaponOverride
       value: 
       objectReference: {fileID: 22100000, guid: 5fe6928794fd1aa2d816b8cb1309533b, type: 2}
+    - target: {fileID: 8008340377044022004, guid: decfe4149db402148b2e7ec6a2f7c67b, type: 3}
+      propertyPath: defaultWeaponName
+      value: Sword
+      objectReference: {fileID: 0}
     - target: {fileID: 8008340377044022004, guid: decfe4149db402148b2e7ec6a2f7c67b, type: 3}
       propertyPath: leftHandTransform
       value: 
