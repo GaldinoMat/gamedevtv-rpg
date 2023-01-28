@@ -14,7 +14,7 @@ namespace RPG.Attributes
 
         private void Update()
         {
-            gameObject.GetComponent<Text>().text = $"{health.GetPercentage()}%";
+            gameObject.GetComponent<Text>().text = $"{health.GetPercentage()}";
 
             // OR
             // gameObject.GetComponent<Text>().text = String.Format("{0:0.0}%", health.GetPercentage());

@@ -3,10 +3,12 @@ using RPG.Movement;
 using RPG.Core;
 using RPG.Saving;
 using RPG.Attributes;
+using RPG.Stats;
+using System.Collections.Generic;
 
 namespace RPG.Combat
 {
-    public class Fighter : MonoBehaviour, IAction, ISavable
+    public class Fighter : MonoBehaviour, IAction, ISavable, IModifierProvider
     {
         Animator anim;
 
@@ -91,13 +93,15 @@ namespace RPG.Combat
         {
             if (target == null) return;
 
+            float damage = GetComponent<BaseStats>().GetNewStat(Stat.Damage);
+
             if (currentWeapon.IsProjectile())
             {
-                currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, target, gameObject);
+                currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, target, gameObject, damage);
             }
             else
             {
-                target.TakeDamage(gameObject, currentWeapon.GetWeaponDamage());
+                target.TakeDamage(gameObject, damage);
             }
         }
 
@@ -138,6 +142,22 @@ namespace RPG.Combat
             anim.SetTrigger("stopAttack");
         }
 
+        public IEnumerable<float> GetAditiveModifiers(Stat stat)
+        {
+            if (stat == Stat.Damage)
+            {
+                yield return currentWeapon.GetWeaponDamage();
+            }
+        }
+
+        public IEnumerable<float> GetPercentageModifiers(Stat stat)
+        {
+            if (stat == Stat.Damage)
+            {
+                yield return currentWeapon.GetPercentageBonus();
+            }
+        }
+
         public object CaptureState()
         {
             if (currentWeapon.name == null) currentWeapon.name = "Unarmed";
@@ -151,5 +171,6 @@ namespace RPG.Combat
             Weapon weapon = Resources.Load<Weapon>(stateWeaponName);
             EquipWeapon(weapon);
         }
+
     }
 }
