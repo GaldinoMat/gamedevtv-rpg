@@ -1,7 +1,7 @@
 using RPG.Movement;
 using UnityEngine;
 using RPG.Combat;
-using RPG.Core;
+using RPG.Attributes;
 
 namespace RPG.Control
 {
@@ -13,7 +13,7 @@ namespace RPG.Control
         
         Fighter fighter;
 
-        private void Start()
+        private void Awake()
         {
             mover = GetComponent<Mover>();
             fighter = GetComponent<Fighter>();

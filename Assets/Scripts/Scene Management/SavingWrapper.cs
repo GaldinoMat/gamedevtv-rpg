@@ -11,12 +11,17 @@ namespace RPG.SceneManagement
 
         [SerializeField] float fadeTime = 1f;
 
-        private IEnumerator Start()
+        private void Awake()
         {
+            StartCoroutine(LoadLastScene());
+        }
+
+        private IEnumerator LoadLastScene()
+        {
+            yield return GetComponent<SavingSystem>().LoadOnStart(defaultSaveFile);
             Fader fade = FindObjectOfType<Fader>();
 
             fade.FadeOutOnLoad();
-            yield return GetComponent<SavingSystem>().LoadOnStart(defaultSaveFile);
             yield return fade.FadeIn(fadeTime);
         }
 
@@ -31,6 +36,11 @@ namespace RPG.SceneManagement
             {
                 LoadInput();
             }
+
+            if (Input.GetKeyDown(KeyCode.Delete))
+            {
+                DeleteSave();
+            }
         }
 
         public void LoadInput()
@@ -41,6 +51,11 @@ namespace RPG.SceneManagement
         public void SaveInput()
         {
             GetComponent<SavingSystem>().Save(defaultSaveFile);
+        }
+
+        public void DeleteSave()
+        {
+            GetComponent<SavingSystem>().Delete(defaultSaveFile);
         }
     }
 

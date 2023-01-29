@@ -1,4 +1,4 @@
-using RPG.Core;
+using RPG.Attributes;
 using UnityEngine;
 
 namespace RPG.Combat
@@ -17,6 +17,8 @@ namespace RPG.Combat
         [SerializeField] GameObject hitEffect = null;
 
         float damage = 0;
+
+        GameObject instigator = null;
 
         private void Start()
         {
@@ -38,9 +40,10 @@ namespace RPG.Combat
             transform.Translate(Vector3.forward * speed * Time.deltaTime);
         }
 
-        public void SetTarget(Health target, float damage)
+        public void SetTarget(Health target, GameObject instigator, float damage)
         {
             this.target = target;
+            this.instigator = instigator;
             this.damage = damage;
         }
 
@@ -69,7 +72,7 @@ namespace RPG.Combat
 
             CheckTarget();
 
-            target.TakeDamage(damage);
+            target.TakeDamage(instigator, damage);
 
             speed = 0f;
 

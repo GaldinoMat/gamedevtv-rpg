@@ -1,4 +1,6 @@
 using System;
+using GameDevTV.Utils;
+using RPG.Attributes;
 using RPG.Combat;
 using RPG.Core;
 using RPG.Movement;
@@ -9,7 +11,7 @@ namespace RPG.Control
 
     public class AiController : MonoBehaviour
     {
-        Vector3 guardPosition;
+        LazyValue<Vector3> guardPosition;
 
         GameObject playerObj;
 
@@ -33,14 +35,24 @@ namespace RPG.Control
 
         int currentWaypointIndex = 0;
 
-        private void Start()
+        private void Awake()
         {
-            guardPosition = transform.position;
-
             fighter = GetComponent<Fighter>();
             health = GetComponent<Health>();
             playerObj = GameObject.FindWithTag("Player");
             mover = GetComponent<Mover>();
+
+            guardPosition = new LazyValue<Vector3>(GetGuardPosition);
+        }
+
+        private Vector3 GetGuardPosition()
+        {
+            return transform.position;
+        }
+
+        private void Start()
+        {
+            guardPosition.ForceInit();
         }
 
         private void Update()
@@ -82,7 +94,7 @@ namespace RPG.Control
 
         private void PatrolBehaviour()
         {
-            Vector3 nextPosition = guardPosition;
+            Vector3 nextPosition = guardPosition.value;
 
             if (path != null)
             {

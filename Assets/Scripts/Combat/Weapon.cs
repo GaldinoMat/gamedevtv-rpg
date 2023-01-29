@@ -1,4 +1,4 @@
-using RPG.Core;
+using RPG.Attributes;
 using UnityEngine;
 
 namespace RPG.Combat
@@ -15,7 +15,9 @@ namespace RPG.Combat
         
         [SerializeField] float weaponRange = 0f;
         [SerializeField] float weaponDamage = 0f;
-        
+        [SerializeField] float weaponPercentageBonus = 0f;
+
+
         [SerializeField] bool isRightHanded = true;
 
         const string weaponName = "Weapon";
@@ -70,11 +72,11 @@ namespace RPG.Combat
             return projectile != null;
         }
 
-        public void LaunchProjectile(Transform rightHand, Transform leftHand, Health target)
+        public void LaunchProjectile(Transform rightHand, Transform leftHand, Health target, GameObject instigator, float calculatedDamage)
         {
             Projectile projectileInstance =
                 Instantiate(projectile, GetTransform(rightHand, leftHand).position, Quaternion.identity);
-            projectileInstance.SetTarget(target, weaponDamage);
+            projectileInstance.SetTarget(target, instigator, calculatedDamage);
         }
 
         public float GetWeaponDamage()
@@ -85,6 +87,11 @@ namespace RPG.Combat
         public float GetWeaponRange()
         {
             return weaponRange;
+        }
+
+        public float GetPercentageBonus()
+        {
+            return weaponPercentageBonus;
         }
     }
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using RPG.Core;
 using RPG.Saving;
+using RPG.Attributes;
 
 namespace RPG.Movement
 {
@@ -19,7 +20,7 @@ namespace RPG.Movement
         [SerializeField] float maxSpeed = 6f;
 
         // Start is called before the first frame update
-        void Start()
+        void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
             anim = GetComponent<Animator>();
