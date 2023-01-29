@@ -20,7 +20,7 @@ namespace RPG.Movement
         [SerializeField] float maxSpeed = 6f;
 
         // Start is called before the first frame update
-        void Start()
+        void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
             anim = GetComponent<Animator>();

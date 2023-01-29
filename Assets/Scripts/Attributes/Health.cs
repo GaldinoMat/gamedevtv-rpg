@@ -1,4 +1,5 @@
 using System;
+using GameDevTV.Utils;
 using RPG.Core;
 using RPG.Saving;
 using RPG.Stats;
@@ -10,26 +11,39 @@ namespace RPG.Attributes
     {
         [SerializeField] float regenerationPercentage = 70;
 
-        float health = -1f;
+        LazyValue<float> health;
 
         bool isDead = false;
 
+        private void Awake()
+        {
+            health = new LazyValue<float>(GetInitialHealth);
+        }
 
         private void Start()
         {
+            health.ForceInit();
+        }
+
+        private float GetInitialHealth()
+        {
+            return GetComponent<BaseStats>().GetNewStat(Stat.Health);
+        }
+
+        private void OnEnable()
+        {
             GetComponent<BaseStats>().onLevelUp += levelUpHealh;
+        }
 
-            if (health < 0)
-            {
-                health = GetComponent<BaseStats>().GetNewStat(Stat.Health);
-            }
-
+        private void OnDisable()
+        {
+            GetComponent<BaseStats>().onLevelUp -= levelUpHealh;
         }
 
         private void levelUpHealh()
         {
             float regenHealth = GetComponent<BaseStats>().GetNewStat(Stat.Health) * (regenerationPercentage / 100);
-            health = Mathf.Max(health, regenHealth);
+            health.value = Mathf.Max(health.value, regenHealth);
         }
 
         public bool IsDead()
@@ -41,9 +55,9 @@ namespace RPG.Attributes
         {
             print(gameObject.name + "took damage: " + damage);
 
-            health = MathF.Max(health - damage, 0);
+            health.value = MathF.Max(health.value - damage, 0);
 
-            if (health <= 0)
+            if (health.value <= 0)
             {
                 AwardExperience(instigator);
                 Die();
@@ -52,7 +66,7 @@ namespace RPG.Attributes
 
         public string GetPercentage()
         {
-            return $"{health} / {GetComponent<BaseStats>().GetNewStat(Stat.Health)}";
+            return $"{health.value} / {GetComponent<BaseStats>().GetNewStat(Stat.Health)}";
         }
 
         private void AwardExperience(GameObject instigator)
@@ -74,15 +88,15 @@ namespace RPG.Attributes
 
         public object CaptureState()
         {
-            return health;
+            return health.value;
         }
 
 
         public void RestoreState(object state)
         {
-            health = (float)state;
+            health.value = (float)state;
 
-            if (health <= 0)
+            if (health.value <= 0)
             {
                 Die();
             }

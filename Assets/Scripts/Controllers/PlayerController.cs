@@ -13,7 +13,7 @@ namespace RPG.Control
         
         Fighter fighter;
 
-        private void Start()
+        private void Awake()
         {
             mover = GetComponent<Mover>();
             fighter = GetComponent<Fighter>();
