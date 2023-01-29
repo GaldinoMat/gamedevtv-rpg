@@ -43,8 +43,6 @@ namespace RPG.Combat
             {
                 animator.runtimeAnimatorController = overrideController.runtimeAnimatorController;
             }
-
-
         }
 
         private void DestroyEquippedWeapon(Transform rightHand, Transform leftHand)
