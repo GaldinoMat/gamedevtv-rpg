@@ -216,12 +216,12 @@ MonoBehaviour:
       - m_Target: {fileID: 1993689866720122462}
         m_TargetAssemblyTypeName: RPG.UI.DamageText.DamageTextSpawner, Assembly-CSharp
         m_MethodName: Spawn
-        m_Mode: 4
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 15
+          m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
@@ -246,7 +246,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7361225656018138777, guid: 5d1a5dc5ca1ed35c5b3d64626cd08ebe, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 2.1
       objectReference: {fileID: 0}
     - target: {fileID: 7361225656018138777, guid: 5d1a5dc5ca1ed35c5b3d64626cd08ebe, type: 3}
       propertyPath: m_LocalPosition.z

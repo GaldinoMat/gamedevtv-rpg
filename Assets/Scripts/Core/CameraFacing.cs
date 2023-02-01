@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace RPG.Core
 {
-    public class CameraFacingText : MonoBehaviour
+    public class CameraFacing : MonoBehaviour
     {
 
         // Update is called once per frame
