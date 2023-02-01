@@ -22,7 +22,7 @@ namespace RPG.Combat
             else
             {
                 Health enemyHealth = playerFighter.GetTarget();
-                gameObject.GetComponent<Text>().text = $"{enemyHealth.GetPercentage()}";
+                gameObject.GetComponent<Text>().text = $"{enemyHealth.GetHealthPoints()}/{enemyHealth.GetMaxHealthPoints()}";
                 
                 // OR
                 // gameObject.GetComponent<Text>().text = String.Format("{0:0.0}%", enemyHealth.GetPercentage());

@@ -1,3 +1,4 @@
+using RPG.Stats;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +15,7 @@ namespace RPG.Attributes
 
         private void Update()
         {
-            gameObject.GetComponent<Text>().text = $"{health.GetPercentage()}";
+            gameObject.GetComponent<Text>().text = $"{health.GetHealthPoints()}/{health.GetMaxHealthPoints()}";
 
             // OR
             // gameObject.GetComponent<Text>().text = String.Format("{0:0.0}%", health.GetPercentage());
