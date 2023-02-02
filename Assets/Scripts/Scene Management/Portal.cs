@@ -65,7 +65,7 @@ namespace RPG.SceneManagement
             wrapper.SaveInput();
 
             yield return new WaitForSeconds(loadTimer);
-            yield return fader.FadeIn(fadeTimer);
+            fader.FadeIn(fadeTimer);
 
             EnableControl();
 
