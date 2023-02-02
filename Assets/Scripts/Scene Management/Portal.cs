@@ -1,6 +1,6 @@
 using System.Collections;
 using RPG.Control;
-using RPG.Movement;
+using RPG.Core;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -22,6 +22,8 @@ namespace RPG.SceneManagement
 
         [SerializeField] float fadeTimer = 3f;
         [SerializeField] float loadTimer = .5f;
+
+        GameObject player = null;
 
         private void OnTriggerEnter(Collider other)
         {
@@ -45,12 +47,16 @@ namespace RPG.SceneManagement
 
             SavingWrapper wrapper = FindObjectOfType<SavingWrapper>();
 
+            DisableControl();
+
             yield return fader.FadeOut(fadeTimer);
-            
+
             wrapper.SaveInput();
-            
+
             yield return SceneManager.LoadSceneAsync(sceneToLoad);
-            
+
+            DisableControl();
+
             wrapper.LoadInput();
 
             Portal portal = GetOtherPortal();
@@ -60,7 +66,23 @@ namespace RPG.SceneManagement
 
             yield return new WaitForSeconds(loadTimer);
             yield return fader.FadeIn(fadeTimer);
+
+            EnableControl();
+
             Destroy(gameObject, .1f);
+        }
+
+        void DisableControl()
+        {
+            GameObject player = GameObject.FindWithTag("Player");
+            player.GetComponent<ActionScheduler>().CancelCurrentAction();
+            player.GetComponent<PlayerController>().enabled = false;
+        }
+
+        void EnableControl()
+        {
+            GameObject player = GameObject.FindWithTag("Player");
+            player.GetComponent<PlayerController>().enabled = true;
         }
 
         private void UpdatePlayer(Portal portal)
