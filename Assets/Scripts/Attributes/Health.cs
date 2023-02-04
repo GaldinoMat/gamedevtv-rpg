@@ -41,6 +41,11 @@ namespace RPG.Attributes
             GetComponent<BaseStats>().onLevelUp += levelUpHealh;
         }
 
+        public void Heal(float healthToRestore)
+        {
+            health.value = Mathf.Min(health.value + healthToRestore, GetMaxHealthPoints());
+        }
+
         private void OnDisable()
         {
             GetComponent<BaseStats>().onLevelUp -= levelUpHealh;

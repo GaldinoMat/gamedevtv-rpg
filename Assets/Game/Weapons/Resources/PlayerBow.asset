@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: PlayerBow
   m_EditorClassIdentifier: 
   weaponAnimatorOverride: {fileID: 22100000, guid: a55fa5e8040af19f6928fcfecbfa717f, type: 2}
-  weaponPrefab: {fileID: 3078987995714652867, guid: 6a3a530c17dd47ddc94909742d420bde, type: 3}
+  weaponPrefab: {fileID: 7354151896028234763, guid: 6a3a530c17dd47ddc94909742d420bde, type: 3}
+  projectile: {fileID: 4289555993870865573, guid: 9de9637557995602f90f26bcf1c78203, type: 3}
   weaponRange: 10
   weaponDamage: 5
+  weaponPercentageBonus: 0
   isRightHanded: 0
-  projectile: {fileID: 4289555993870865573, guid: 9de9637557995602f90f26bcf1c78203, type: 3}
