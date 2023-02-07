@@ -25,13 +25,17 @@ namespace RPG.Control
 
         [SerializeField] float chaseDistance = 5f;
         [SerializeField] float suspicionTime = 3f;
+        [SerializeField] float aggroCooldown = 5f;
         [SerializeField] float waypointTolerance = 1f;
         [SerializeField] float dwellingTime = 0f;
         [Range(0, 1)]
         [SerializeField] float patrolSpeedFraction = .2f;
+        [SerializeField] float shoutDistance = 10f;
+
 
         float timeSinceAlert = Mathf.Infinity;
         float timeSinceLastDwell = Mathf.Infinity;
+        float timeSinceAggravated = Mathf.Infinity;
 
         int currentWaypointIndex = 0;
 
@@ -59,7 +63,7 @@ namespace RPG.Control
         {
             if (health.IsDead()) return;
 
-            if (CanChase())
+            if (IsAggravated() && fighter.CanAttack(playerObj))
             {
                 AttackBehaviour();
             }
@@ -75,16 +79,38 @@ namespace RPG.Control
             UpdateTimers();
         }
 
+        public void Aggravate()
+        {
+            timeSinceAggravated = 0;
+        }
+
         private void UpdateTimers()
         {
             timeSinceAlert += Time.deltaTime;
             timeSinceLastDwell += Time.deltaTime;
+            timeSinceAggravated += Time.deltaTime;
         }
 
         private void AttackBehaviour()
         {
             timeSinceAlert = 0;
             fighter.Attack(playerObj);
+
+            AggravateNearbyEnemies();
+        }
+
+        private void AggravateNearbyEnemies()
+        {
+            RaycastHit[] hits = Physics.SphereCastAll(transform.position, shoutDistance, Vector3.up, 0);
+
+            foreach (RaycastHit enemy in hits)
+            {
+                AiController foundEnemy = enemy.transform.GetComponent<AiController>();
+
+                if (!foundEnemy) continue;
+
+                foundEnemy.Aggravate();
+            }
         }
 
         private void SuspicionBehaviour()
@@ -131,9 +157,9 @@ namespace RPG.Control
             return distanceToWaypoint < waypointTolerance;
         }
 
-        private bool CanChase()
+        private bool IsAggravated()
         {
-            return Vector3.Distance(transform.position, playerObj.transform.position) <= chaseDistance;
+            return Vector3.Distance(transform.position, playerObj.transform.position) <= chaseDistance || timeSinceAggravated < aggroCooldown;
         }
 
         private void OnDrawGizmosSelected()
