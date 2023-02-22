@@ -8,6 +8,8 @@ namespace RPG.RPGDialogue
     public class DialogueNode : ScriptableObject
     {
         [SerializeField]
+        private bool isPlayerSpeaking = false; // Turn into ENUM when adding multiple speakers
+        [SerializeField]
         private string text;
         [SerializeField]
         private List<string> children = new List<string>();
@@ -20,12 +22,16 @@ namespace RPG.RPGDialogue
 
         public List<string> Children => children;
 
+        public bool IsPlayerSpeaking => isPlayerSpeaking;
+
 #if UNITY_EDITOR
         public void SetRect(Vector2 newPosition)
         {
             Undo.RecordObject(this, "Move dialogue node position");
 
             rectPosition.position = newPosition;
+
+            EditorUtility.SetDirty(this);
         }
 
         public void SetText(string newText)
@@ -35,6 +41,8 @@ namespace RPG.RPGDialogue
                 Undo.RecordObject(this, "Update Dialogue Text");
 
                 text = newText;
+
+                EditorUtility.SetDirty(this);
             }
         }
 
@@ -43,6 +51,8 @@ namespace RPG.RPGDialogue
             Undo.RecordObject(this, "Add Dialogue Link");
 
             children.Add(childID);
+
+            EditorUtility.SetDirty(this);
         }
 
         public void RemoveChild(string childID)
@@ -50,6 +60,17 @@ namespace RPG.RPGDialogue
             Undo.RecordObject(this, "Remove Dialogue Link");
 
             children.Remove(childID);
+
+            EditorUtility.SetDirty(this);
+        }
+
+        public void SetSpeaker(bool isPlayerPeaker)
+        {
+            Undo.RecordObject(this, "Change Dialogue Speaker");
+
+            isPlayerSpeaking = isPlayerPeaker;
+
+            EditorUtility.SetDirty(this);
         }
 #endif
     }

@@ -1,5 +1,27 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-847176602264104480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85fb09130926a62cbafd8ee3e83d965b, type: 3}
+  m_Name: 69c5faf6-7d05-4ab9-b81d-072bf0398c27
+  m_EditorClassIdentifier: 
+  isPlayerSpeaking: 0
+  text: 
+  children:
+  - 4b09fa9d-0f19-474f-9775-91f9c90f53cf
+  rectPosition:
+    serializedVersion: 2
+    x: 213
+    y: 263
+    width: 200
+    height: 100
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13,8 +35,9 @@ MonoBehaviour:
   m_Name: New Dialogue
   m_EditorClassIdentifier: 
   nodes:
-  - {fileID: 838946533182647193}
---- !u!114 &838946533182647193
+  - {fileID: -847176602264104480}
+  - {fileID: 3389478201430621609}
+--- !u!114 &3389478201430621609
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -24,13 +47,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85fb09130926a62cbafd8ee3e83d965b, type: 3}
-  m_Name: 16891447-0b3b-4ed9-913e-90a68c02d9c2
+  m_Name: 4b09fa9d-0f19-474f-9775-91f9c90f53cf
   m_EditorClassIdentifier: 
+  isPlayerSpeaking: 1
   text: 
   children: []
   rectPosition:
     serializedVersion: 2
-    x: 218
-    y: 225
+    x: 529
+    y: 207
     width: 200
     height: 100
