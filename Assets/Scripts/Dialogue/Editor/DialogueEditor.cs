@@ -90,15 +90,15 @@ namespace RPG.RPGDialogue.Editor
                 Texture2D backgroundTexture = Resources.Load("background") as Texture2D;
 
                 const float backgroundWidth = canvasSize / backgroundSize;
-                
+
                 Rect textCoordinates = new Rect(0, 0, backgroundWidth, backgroundWidth);
                 GUI.DrawTextureWithTexCoords(canvas, backgroundTexture, textCoordinates);
 
-                foreach (DialogueNode node in selectedDialogue.GetAllNodes())
+                foreach (DialogueNode node in selectedDialogue.AllNodes)
                 {
                     DrawConnections(node);
                 }
-                foreach (DialogueNode node in selectedDialogue.GetAllNodes())
+                foreach (DialogueNode node in selectedDialogue.AllNodes)
                 {
                     DrawNode(node);
                 }
@@ -107,31 +107,16 @@ namespace RPG.RPGDialogue.Editor
 
                 if (creatingNode != null)
                 {
-                    Undo.RecordObject(selectedDialogue, "Added Dialogue Node");
                     selectedDialogue.CreateNode(creatingNode);
                     creatingNode = null;
                 }
                 if (deletingNode != null)
                 {
-                    Undo.RecordObject(selectedDialogue, ("Deleted Dialogue Node"));
                     selectedDialogue.DeleteNode(deletingNode);
                     deletingNode = null;
                 }
             }
 
-        }
-
-        private void DrawConnections(DialogueNode node)
-        {
-            Vector3 startPosition = new Vector2(node.rectPosition.xMax, node.rectPosition.center.y);
-            foreach (DialogueNode childNode in selectedDialogue.GetAllChildren(node))
-            {
-                Vector3 endPosition = new Vector2(childNode.rectPosition.xMin, childNode.rectPosition.center.y);
-                Vector3 controlOffset = endPosition - startPosition;
-                controlOffset.y = 0;
-                controlOffset.x *= .8f;
-                Handles.DrawBezier(startPosition, endPosition, startPosition + controlOffset, endPosition - controlOffset, Color.white, null, 4f);
-            }
         }
 
         private void ProcessEvents()
@@ -142,7 +127,7 @@ namespace RPG.RPGDialogue.Editor
                 draggingNode = GetNodeAtPoint(point);
                 if (draggingNode != null)
                 {
-                    dragginOffset = draggingNode.rectPosition.position - Event.current.mousePosition;
+                    dragginOffset = draggingNode.Rect.position - Event.current.mousePosition;
                     Selection.activeObject = draggingNode;
                 }
                 else
@@ -154,8 +139,7 @@ namespace RPG.RPGDialogue.Editor
             }
             else if (Event.current.type == EventType.MouseDrag && draggingNode != null)
             {
-                Undo.RecordObject(selectedDialogue, "Move dialogue node position");
-                draggingNode.rectPosition.position = Event.current.mousePosition + dragginOffset;
+                draggingNode.SetRect(Event.current.mousePosition + dragginOffset);
 
                 GUI.changed = true;
             }
@@ -179,9 +163,9 @@ namespace RPG.RPGDialogue.Editor
         private DialogueNode GetNodeAtPoint(Vector2 point)
         {
             DialogueNode foundNode = null;
-            foreach (DialogueNode node in selectedDialogue.GetAllNodes())
+            foreach (DialogueNode node in selectedDialogue.AllNodes)
             {
-                if (node.rectPosition.Contains(Event.current.mousePosition))
+                if (node.Rect.Contains(Event.current.mousePosition))
                 {
                     foundNode = node;
                 }
@@ -192,17 +176,9 @@ namespace RPG.RPGDialogue.Editor
 
         private void DrawNode(DialogueNode node)
         {
-            GUILayout.BeginArea(node.rectPosition, nodeStyle);
-            EditorGUI.BeginChangeCheck();
+            GUILayout.BeginArea(node.Rect, nodeStyle);
 
-            string newText = EditorGUILayout.TextField(node.text);
-
-            if (EditorGUI.EndChangeCheck())
-            {
-                Undo.RecordObject(selectedDialogue, "Update Dialogue Text");
-
-                node.text = newText;
-            }
+            node.SetText(EditorGUILayout.TextField(node.Text));
 
             GUILayout.BeginHorizontal();
 
@@ -238,12 +214,11 @@ namespace RPG.RPGDialogue.Editor
                     linkingParentNode = null;
                 }
             }
-            else if (linkingParentNode.children.Contains(node.name))
+            else if (linkingParentNode.Children.Contains(node.name))
             {
                 if (GUILayout.Button("Unlink"))
                 {
-                    Undo.RecordObject(selectedDialogue, "Remove Dialogue Link");
-                    linkingParentNode.children.Remove(node.name);
+                    linkingParentNode.RemoveChild(node.name);
                     linkingParentNode = null;
                 }
             }
@@ -251,10 +226,22 @@ namespace RPG.RPGDialogue.Editor
             {
                 if (GUILayout.Button("Child"))
                 {
-                    Undo.RecordObject(selectedDialogue, "Add Dialogue Link");
-                    linkingParentNode.children.Add(node.name);
+                    linkingParentNode.AddChild(node.name);
                     linkingParentNode = null;
                 }
+            }
+        }
+
+        private void DrawConnections(DialogueNode node)
+        {
+            Vector3 startPosition = new Vector2(node.Rect.xMax, node.Rect.center.y);
+            foreach (DialogueNode childNode in selectedDialogue.GetAllChildren(node))
+            {
+                Vector3 endPosition = new Vector2(childNode.Rect.xMin, childNode.Rect.center.y);
+                Vector3 controlOffset = endPosition - startPosition;
+                controlOffset.y = 0;
+                controlOffset.x *= .8f;
+                Handles.DrawBezier(startPosition, endPosition, startPosition + controlOffset, endPosition - controlOffset, Color.white, null, 4f);
             }
         }
     }
